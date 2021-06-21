@@ -40,7 +40,33 @@ services:
 #        aliases:
 #          - roach2
 
+  influxdb:
+    container_name: influx1
+    image: influxdb:latest
+    volumes: 
+      - ../influxdb-data/influx1:/var/lib/influxdb
+    networks:
+      influxdb_net:
+        aliases:
+          - influx1
+    ports:
+      - "8086:8086"
+
+  telegraf:
+    container_name: telegraf1
+    image: telegraf:latest
+    networks:
+      influxdb_net:
+        aliases:
+          - telegraf
+
+    
+    
+
 networks:
   cockroachdb_net:
+    driver: bridge
+
+  influxdb_net:
     driver: bridge
 
