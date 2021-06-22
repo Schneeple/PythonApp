@@ -1,6 +1,9 @@
 # Jet Brains
 .idea/
 
+# Jupyter Notebooks
+/notebooks
+
 # SQL
 /cockroach-data
 

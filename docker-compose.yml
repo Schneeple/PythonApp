@@ -4,30 +4,38 @@ services:
     build: Dockerfile
     image: app
     depends_on:
-      - roach1
+      - influxdb
     networks:
-      cockroachdb_net:
-        aliases:
-          - app1
+      influxdb_net:
     volumes:
       - $PWD:/src
 
-
-  roach1:
-    container_name: roach1
-    image: cockroachdb/cockroach:latest
+  jupyter:
+    image: jupyter/datascience-notebook:latest
     volumes:
-      - ../cockroach-data/roach1:/cockroach/cockroach-data
-    command: start-single-node --insecure
-
+      - $PWD/notebooks:/home/jovyan/work
     ports:
-      - "26257:26257"
-      - "8080:8080"
-      - "5432:5432"
+      - "10000:8888"
+    depends_on:
+      - influxdb
     networks:
-      cockroachdb_net:
-        aliases:
-          - roach1
+      influxdb_net:
+
+#  roach1:
+#    container_name: roach1
+#    image: cockroachdb/cockroach:latest
+#    volumes:
+#      - ../cockroach-data/roach1:/cockroach/cockroach-data
+#    command: start-single-node --insecure
+#
+#    ports:
+#      - "26257:26257"
+#      - "8080:8080"
+#      - "5432:5432"
+#    networks:
+#      cockroachdb_net:
+#        aliases:
+#          - roach1
 
 #  roach2:
 #    container_name: roach2
@@ -43,7 +51,7 @@ services:
   influxdb:
     container_name: influx1
     image: influxdb:latest
-    volumes: 
+    volumes:
       - ../influxdb-data/influx1:/var/lib/influxdb
     networks:
       influxdb_net:
@@ -60,12 +68,10 @@ services:
         aliases:
           - telegraf
 
-    
-    
 
 networks:
-  cockroachdb_net:
-    driver: bridge
+#  cockroachdb_net:
+#    driver: bridge
 
   influxdb_net:
     driver: bridge
